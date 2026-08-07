@@ -1,3 +1,5 @@
-import type { CreateUserDto } from "./create-user.dto.js";
+import type { CreateUserRequestDto } from "./create-user.dto.js";
 
-type UpdateUserDto = Partial<CreateUserDto>
+export type UpdateUserRequestDto = Partial<
+    Omit<CreateUserRequestDto, "password">
+>;

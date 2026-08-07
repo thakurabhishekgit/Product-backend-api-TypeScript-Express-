@@ -7,7 +7,7 @@ export type UserResponseDto = {
     email: string;
     role: userRole;
     status: userstatus;
-    lastLoginAt: Date;
+    lastLoginAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 };

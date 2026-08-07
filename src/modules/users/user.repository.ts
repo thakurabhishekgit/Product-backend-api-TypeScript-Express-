@@ -1,7 +1,7 @@
-import type { Prisma, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
-import type {UpdateUserRequestDto} from "./dto/request/update-user.dto.js"
+import type { UpdateUserRequestDto } from "./dto/request/update-user.dto.js";
 
 
 
@@ -16,12 +16,15 @@ export async function createUser(
 }
 
 export async function updateUser(
-    data: UpdateUserRequestDto
+    data: UpdateUserRequestDto,
+    id: string,
 ): Promise<User> {
- 
     return prisma.user.update({
+        where: {
+            id,
+        },
         data,
-    })
+    });
 }
 
 

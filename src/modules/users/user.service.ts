@@ -1,10 +1,10 @@
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
-import { createUser, findUserByEmail , findUserById, getAllusers, updateLastLogin } from "./user.repository.js";
+import type {UpdateUserRequestDto} from "./dto/request/update-user.dto.js"
+import { createUser, findUserByEmail , findUserById, getAllusers, updateLastLogin, updateUser } from "./user.repository.js";
 import { toUserResponse } from "../../utils/mapper.js";
 import { comparePassword, hashPassword } from "../../utils/password.js";
 import { AppError } from "../../utils/app-error.js";
-import prisma from "../../config/prisma.js";
 
 export async function registerUser(
     dto: CreateUserRequestDto,
@@ -80,5 +80,39 @@ export async function getUserById(
     return toUserResponse(user);
 
 
+}
+
+
+
+export async function updateUserById(
+    dto: UpdateUserRequestDto,
+    id: string,
+): Promise<UserResponseDto> {
+    const existingUser = await findUserById(id);
+
+    if (!existingUser) {
+        throw new AppError("cannot find user with this id", 404);
+    }
+
+    if (dto.email && dto.email !== existingUser.email) {
+        const emailTaken = await findUserByEmail(dto.email);
+
+        if (emailTaken) {
+            throw new AppError("Email already exists", 409);
+        }
+    }
+
+    const updatedUser = await updateUser(
+        {
+            firstName: dto.firstName,
+            lastName: dto.lastName,
+            email: dto.email,
+            role: dto.role,
+            status: dto.status,
+        },
+        id,
+    );
+
+    return toUserResponse(updatedUser);
 }
 
