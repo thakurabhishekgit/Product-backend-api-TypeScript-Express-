@@ -14,7 +14,7 @@ model User {
   email       String     @unique
   password    String     @db.VarChar(100)
   role        userRole   @default(EMPLOYEE)
-  status      Userstatus @default(ACTIVE)
+  status      userstatus @default(ACTIVE)
   lastLoginAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -26,7 +26,7 @@ enum userRole {
   EMPLOYEE
 }
 
-enum Userstatus {
+enum userstatus {
   ACTIVE
   INACTIVE
   SUSPENDED
