@@ -8,3 +8,9 @@ export const createUserSchema = z.object({
     status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED"]).optional(),
     role: z.enum(["ADMIN", "EMPLOYEE"]).optional(),
 });
+
+
+export const loginUserSchema = z.object({
+    email: z.email(),
+    password: z.string()
+})

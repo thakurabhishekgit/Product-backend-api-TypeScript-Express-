@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { getAllUsers, registerUser } from "./user.service.js";
+import { getAllUsers, registerUser, userLogin  , getUserById} from "./user.service.js";
+import type { UserResponseDto } from "./dto/response/user-response-dto.js";
 
 export async function register(
     req: Request,
@@ -37,3 +38,49 @@ export async function getAll(
         next(error)
     }
 }
+
+
+export async function login(
+    req: Request,
+    res: Response ,
+    next: NextFunction
+)  {
+    try{
+        const { email, password } = req.body;
+        const user = await userLogin(email , password);
+
+        return res.status(200).json({
+            success: true,
+            message: "users logined successfully",
+            data: user
+        }) 
+    } catch(error) {
+        next(error)
+    }
+}
+
+interface GetUserParams {
+  id: string;
+}
+
+export async function getUserWithId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try{
+        const { id } = req.params
+        const user = await getUserById(id)
+
+        return res.status(200).json(
+            {
+                success: true,
+                message: `users fetched successfully with id ${id}`,
+                data: user
+            }
+        )
+    } catch(error) {
+        next(error)
+    }
+}
+ 

@@ -9,6 +9,7 @@ export function toUserResponse(user: User): UserResponseDto {
         email: user.email,
         role: user.role,
         status: user.status,
+        lastLoginAt: user.lastLoginAt,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
     };

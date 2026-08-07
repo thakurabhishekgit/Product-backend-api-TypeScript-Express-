@@ -1,10 +1,12 @@
 import type { Prisma, User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
+import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
+import type {UpdateUserRequestDto} from "./dto/request/update-user.dto.js"
 
 
 
 export async function createUser(
-    data: Prisma.UserCreateInput,
+    data: CreateUserRequestDto,
 ): Promise<User> {
 
     return prisma.user.create({
@@ -12,6 +14,16 @@ export async function createUser(
     });
 
 }
+
+export async function updateUser(
+    data: UpdateUserRequestDto
+): Promise<User> {
+ 
+    return prisma.user.update({
+        data,
+    })
+}
+
 
 export async function getAllusers(): Promise<User[]> {
     return prisma.user.findMany();
@@ -39,3 +51,21 @@ export async function findUserById(
         }
     })
 }
+
+export async function updateLastLogin(
+  id: string,
+): Promise<User> {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      lastLoginAt: new Date(),
+    },
+  });
+}
+
+
+
+
+
