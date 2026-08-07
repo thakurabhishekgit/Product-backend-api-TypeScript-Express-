@@ -1,6 +1,6 @@
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
-import { createUser, findUserByEmail } from "./user.repository.js";
+import { createUser, findUserByEmail , getAllusers} from "./user.repository.js";
 import { toUserResponse } from "../../utils/mapper.js";
 import { hashPassword } from "../../utils/password.js";
 import { AppError } from "../../utils/app-error.js";
@@ -26,4 +26,11 @@ export async function registerUser(
     });
 
     return toUserResponse(user);
+}
+
+
+export async function getAllUsers(): Promise<UserResponseDto[]> {
+   
+    return getAllusers();
+    
 }

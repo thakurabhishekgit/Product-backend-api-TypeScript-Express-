@@ -13,6 +13,10 @@ export async function createUser(
 
 }
 
+export async function getAllusers(): Promise<User[]> {
+    return prisma.user.findMany();
+}
+
 export async function findUserByEmail(
     email: string,
 ): Promise<User | null> {
