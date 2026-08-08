@@ -1,7 +1,15 @@
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
 import type {UpdateUserRequestDto} from "./dto/request/update-user.dto.js"
-import { createUser, findUserByEmail , findUserById, getAllusers, updateLastLogin, updateUser } from "./user.repository.js";
+import {
+    createUser,
+    findUserByEmail,
+    findUserById,
+    getActive,
+    getAllusers,
+    updateLastLogin,
+    updateUser,
+} from "./user.repository.js";
 import { toUserResponse } from "../../utils/mapper.js";
 import { comparePassword, hashPassword } from "../../utils/password.js";
 import { AppError } from "../../utils/app-error.js";
@@ -116,3 +124,9 @@ export async function updateUserById(
     return toUserResponse(updatedUser);
 }
 
+
+
+export async function getActiveUsers(): Promise<UserResponseDto[]> {
+    const users = await getActive();
+    return users.map(toUserResponse);
+}

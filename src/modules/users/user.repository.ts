@@ -70,5 +70,13 @@ export async function updateLastLogin(
 
 
 
+export async function getActive(): Promise<User[]> {
+    return prisma.user.findMany({
+        where: {
+            status: "ACTIVE",
+        },
+    });
+}
+
 
 

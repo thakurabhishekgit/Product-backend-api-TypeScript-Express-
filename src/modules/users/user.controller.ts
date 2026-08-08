@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById} from "./user.service.js";
+import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById, getActiveUsers} from "./user.service.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
 
 export async function register(
@@ -106,5 +106,26 @@ export async function updateUserwithId (
         next(error)
     }
     
+}
+
+
+export async function getUserA(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try{
+        const data = await getActiveUsers();
+        
+        return res.status(200).json(
+            {
+                success: true,
+                message: `users fetcehd successfully with status Active `,
+                data: data
+            }
+        )
+    } catch(error) {
+        next(error)
+    }
 }
  
