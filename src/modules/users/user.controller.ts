@@ -7,6 +7,8 @@ export async function register(
     res: Response,
     next: NextFunction,
 ) {
+
+    
     try {
         const user = await registerUser(req.body);
 
