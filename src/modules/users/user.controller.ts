@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
-import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById, getActiveUsers} from "./user.service.js";
+import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById, getActiveUsers, userFilter} from "./user.service.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
+import { userRole, userstatus, type User } from "@prisma/client";
 
 export async function register(
     req: Request,
@@ -8,7 +9,7 @@ export async function register(
     next: NextFunction,
 ) {
 
-    
+
     try {
         const user = await registerUser(req.body);
 
@@ -71,7 +72,7 @@ export async function getUserWithId(
     next: NextFunction
 ) {
     try{
-        const { id } = req.params
+        const id = req.params
         const user = await getUserById(id)
 
         return res.status(200).json(
@@ -123,6 +124,31 @@ export async function getUserA(
             {
                 success: true,
                 message: `users fetcehd successfully with status Active `,
+                data: data
+            }
+        )
+    } catch(error) {
+        next(error)
+    }
+}
+
+
+
+export async function filter(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try{
+
+        const role = req.query.role as userRole | undefined;
+        const status = req.query.status as userstatus | undefined;
+        const data = await userFilter(role , status);
+        
+        return res.status(200).json(
+            {
+                success: true,
+                message: `users fetcehd successfully with query ${role} and ${status} `,
                 data: data
             }
         )

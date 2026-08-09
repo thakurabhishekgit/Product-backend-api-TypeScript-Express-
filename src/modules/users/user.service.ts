@@ -5,6 +5,7 @@ import {
     createUser,
     findUserByEmail,
     findUserById,
+    findUsers,
     getActive,
     getAllusers,
     updateLastLogin,
@@ -13,6 +14,8 @@ import {
 import { toUserResponse } from "../../utils/mapper.js";
 import { comparePassword, hashPassword } from "../../utils/password.js";
 import { AppError } from "../../utils/app-error.js";
+import { userRole, userstatus, type User } from "@prisma/client";
+import { stat } from "node:fs";
 
 export async function registerUser(
     dto: CreateUserRequestDto,
@@ -128,5 +131,15 @@ export async function updateUserById(
 
 export async function getActiveUsers(): Promise<UserResponseDto[]> {
     const users = await getActive();
+    return users.map(toUserResponse);
+}
+
+
+
+export async function userFilter (
+    role?: userRole,
+  status?: userstatus,
+): Promise<UserResponseDto[]> {
+    const users = await findUsers(role , status);
     return users.map(toUserResponse);
 }

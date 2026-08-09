@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { userRole, userstatus, type User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UpdateUserRequestDto } from "./dto/request/update-user.dto.js";
@@ -80,3 +80,15 @@ export async function getActive(): Promise<User[]> {
 
 
 
+
+export async function findUsers(
+  role?: userRole,
+  status?: userstatus,
+): Promise<User[]> {
+  return prisma.user.findMany({
+    where: {
+      role,
+      status,
+    },
+  });
+}
