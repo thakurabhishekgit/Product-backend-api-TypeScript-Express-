@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import userRoutes from "./modules/users/user.routes.js";
+import productRoutes from "./modules/products/product.routes.js"
 import { errorHandler } from "./middlewares/error-handler.js";
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/product", productRoutes);
 
 app.use(errorHandler);
 

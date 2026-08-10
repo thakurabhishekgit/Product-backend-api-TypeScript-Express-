@@ -1,5 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
-import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById, getActiveUsers, userFilter} from "./user.service.js";
+import {
+    getAllUsers,
+    registerUser,
+    userLogin,
+    getUserById,
+    updateUserById,
+    getActiveUsers,
+    userFilter,
+    getUserWithProducts,
+} from "./user.service.js";
 import { userRole, userstatus } from "@prisma/client";
 import { AppError } from "../../utils/app-error.js";
 
@@ -160,6 +169,25 @@ export async function filter(
         )
     } catch(error) {
         next(error)
+    }
+}
+
+export async function getUserProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const id = getRouteId(req);
+        const data = await getUserWithProducts(id);
+
+        return res.status(200).json({
+            success: true,
+            message: `User and products fetched successfully for id ${id}`,
+            data,
+        });
+    } catch (error) {
+        next(error);
     }
 }
  

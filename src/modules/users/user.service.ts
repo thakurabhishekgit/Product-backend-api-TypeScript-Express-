@@ -1,21 +1,22 @@
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UserResponseDto } from "./dto/response/user-response-dto.js";
-import type {UpdateUserRequestDto} from "./dto/request/update-user.dto.js"
+import type { UserWithProductsResponseDto } from "./dto/response/user-with-products-response.dto.js";
+import type { UpdateUserRequestDto } from "./dto/request/update-user.dto.js";
 import {
     createUser,
     findUserByEmail,
     findUserById,
     findUsers,
+    findUserWithProducts,
     getActive,
     getAllusers,
     updateLastLogin,
     updateUser,
 } from "./user.repository.js";
-import { toUserResponse } from "../../utils/mapper.js";
+import { toUserResponse, toUserWithProductsResponse } from "../../utils/mapper.js";
 import { comparePassword, hashPassword } from "../../utils/password.js";
 import { AppError } from "../../utils/app-error.js";
-import { userRole, userstatus, type User } from "@prisma/client";
-import { stat } from "node:fs";
+import type { userRole, userstatus } from "@prisma/client";
 
 export async function registerUser(
     dto: CreateUserRequestDto,
@@ -142,4 +143,20 @@ export async function userFilter (
 ): Promise<UserResponseDto[]> {
     const users = await findUsers(role , status);
     return users.map(toUserResponse);
+}
+
+export async function getUserWithProducts(
+    id: string,
+): Promise<UserWithProductsResponseDto> {
+    if (!id) {
+        throw new AppError("User id is required", 400);
+    }
+
+    const user = await findUserWithProducts(id);
+
+    if (!user) {
+        throw new AppError("User does not exist", 404);
+    }
+
+    return toUserWithProductsResponse(user);
 }

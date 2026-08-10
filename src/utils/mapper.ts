@@ -1,5 +1,8 @@
-import type { User } from "@prisma/client";
+import type { Product, User } from "@prisma/client";
 import type { UserResponseDto } from "../modules/users/dto/response/user-response-dto.js";
+import type { ProductResponseDto } from "../modules/products/dto/response/product-response.dto.js";
+import type { UserWithProductsResponseDto } from "../modules/users/dto/response/user-with-products-response.dto.js";
+import type { UserWithProducts } from "../modules/users/user.repository.js";
 
 export function toUserResponse(user: User): UserResponseDto {
     return {
@@ -12,5 +15,30 @@ export function toUserResponse(user: User): UserResponseDto {
         lastLoginAt: user.lastLoginAt,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+    };
+}
+
+export function toProductResponse(product: Product): ProductResponseDto {
+    return {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        sku: product.sku,
+        price: product.price,
+        stockQuantity: product.stockQuantity,
+        imageUrl: product.imageUrl,
+        status: product.status,
+        createdById: product.createdById,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+    };
+}
+
+export function toUserWithProductsResponse(
+    user: UserWithProducts,
+): UserWithProductsResponseDto {
+    return {
+        ...toUserResponse(user),
+        products: user.produscts.map(toProductResponse),
     };
 }
