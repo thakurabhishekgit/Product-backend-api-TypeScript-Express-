@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { getAllUsers, registerUser, userLogin  , getUserById , updateUserById, getActiveUsers, userFilter} from "./user.service.js";
-import type { UserResponseDto } from "./dto/response/user-response-dto.js";
-import { userRole, userstatus, type User } from "@prisma/client";
+import { userRole, userstatus } from "@prisma/client";
+import { AppError } from "../../utils/app-error.js";
 
 export async function register(
     req: Request,
@@ -62,8 +62,14 @@ export async function login(
     }
 }
 
-interface GetUserParams {
-  id: string;
+function getRouteId(req: Request): string {
+    const id = req.params.id;
+
+    if (typeof id !== "string" || !id) {
+        throw new AppError("Invalid user id", 400);
+    }
+
+    return id;
 }
 
 export async function getUserWithId(
@@ -72,8 +78,8 @@ export async function getUserWithId(
     next: NextFunction
 ) {
     try{
-        const id = req.params
-        const user = await getUserById(id)
+        const id = getRouteId(req);
+        const user = await getUserById(id);
 
         return res.status(200).json(
             {
@@ -94,9 +100,9 @@ export async function updateUserwithId (
     next: NextFunction
 ) {
     try {
-        const {id} = req.params;
-       
-        const user = await updateUserById(req.body , id)
+        const id = getRouteId(req);
+
+        const user = await updateUserById(req.body, id);
        
         return res.status(200).json(
             {
