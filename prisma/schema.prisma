@@ -14,11 +14,28 @@ model User {
   email       String     @unique
   password    String     @db.VarChar(100)
   role        userRole   @default(EMPLOYEE)
-  status      userstatus @default(ACTIVE)
   lastLoginAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?
+  status      userstatus @default(ACTIVE)
+  produscts   Product[]
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  name          String        @db.VarChar(200)
+  description   String?
+  sku           String        @unique @db.VarChar(100)
+  price         Decimal       @db.Decimal(10, 2)
+  stockQuantity Int           @default(0)
+  imageUrl      String?
+  status        ProductStatus @default(ACTIVE)
+  createdById   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+  createdBy     User          @relation(fields: [createdById], references: [id])
 }
 
 enum userRole {
@@ -30,4 +47,10 @@ enum userstatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+
+enum ProductStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  DISCONTINUED
 }
