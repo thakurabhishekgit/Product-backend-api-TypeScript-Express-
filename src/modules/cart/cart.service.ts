@@ -1,8 +1,13 @@
 import { AppError } from "../../utils/app-error.js";
-import { toCartResponse } from "../../utils/mapper.js";
+import { toCartResponse, toUserWithCartResponse } from "../../utils/mapper.js";
 import { findUserById } from "../users/user.repository.js";
 import type { CartResponseDto } from "./dto/response/cart-response.dto.js";
-import { createCart, findCartByUserId } from "./cart.repository.js";
+import type { UserWithCartResponseDto } from "./dto/response/cart-user-response.dto.js";
+import {
+    createCart,
+    findCartByUserId,
+    findUserWithCart,
+} from "./cart.repository.js";
 
 export async function createCartForUser(
     userId: string,
@@ -26,4 +31,20 @@ export async function createCartForUser(
     const cart = await createCart(userId);
 
     return toCartResponse(cart);
+}
+
+export async function getUserWithCart(
+    userId: string,
+): Promise<UserWithCartResponseDto> {
+    if (!userId) {
+        throw new AppError("User id is required", 400);
+    }
+
+    const user = await findUserWithCart(userId);
+
+    if (!user) {
+        throw new AppError("User does not exist", 404);
+    }
+
+    return toUserWithCartResponse(user);
 }

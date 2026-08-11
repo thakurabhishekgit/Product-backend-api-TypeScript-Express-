@@ -1,19 +1,17 @@
-import type { Cart } from "@prisma/client";
+import type { Cart, CartItem, Product, User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
 
+export type CartItemWithProduct = CartItem & {
+    product: Product;
+};
 
+export type CartWithItems = Cart & {
+    items: CartItemWithProduct[];
+};
 
-// Cart DB queries go here
-// Examples to implement:
-// - findCartByUserId
-// - createCart
-// - findCartItem
-// - addCartItem / upsertCartItem
-// - updateCartItemQuantity
-// - removeCartItem
-// - getCartWithItems
-
-
+export type UserWithCart = User & {
+    cart: CartWithItems | null;
+};
 
 export async function findCartByUserId(
     userId: string,
@@ -35,32 +33,54 @@ export async function createCart(
     });
 }
 
-
+export async function findUserWithCart(
+    userId: string,
+): Promise<UserWithCart | null> {
+    return prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        include: {
+            cart: {
+                include: {
+                    items: {
+                        include: {
+                            product: true,
+                        },
+                        orderBy: {
+                            createdAt: "desc",
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
 
 export async function addCartItem(
-  cartId: string,
-  productId: string,
-  quantity: number = 1,
+    cartId: string,
+    productId: string,
+    quantity: number = 1,
 ) {
-  return prisma.cartItem.upsert({
-    where: {
-      cartId_productId: {   // Prisma name for @@unique([cartId, productId])
-        cartId,
-        productId,
-      },
-    },
-    create: {
-      cartId,
-      productId,
-      quantity,
-    },
-    update: {
-      quantity: {
-        increment: quantity, // same product again → increase qty
-      },
-    },
-    include: {
-      product: true, // join Product for response
-    },
-  });
+    return prisma.cartItem.upsert({
+        where: {
+            cartId_productId: {
+                cartId,
+                productId,
+            },
+        },
+        create: {
+            cartId,
+            productId,
+            quantity,
+        },
+        update: {
+            quantity: {
+                increment: quantity,
+            },
+        },
+        include: {
+            product: true,
+        },
+    });
 }

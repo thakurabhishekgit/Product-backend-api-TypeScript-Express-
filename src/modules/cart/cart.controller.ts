@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../../utils/app-error.js";
-import { createCartForUser } from "./cart.service.js";
+import { createCartForUser, getUserWithCart } from "./cart.service.js";
 
 function getRouteUserId(req: Request): string {
     const userId = req.params.userId;
@@ -25,6 +25,25 @@ export async function createCart(
             success: true,
             message: "Cart created successfully",
             data: cart,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getUserCartDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const userId = getRouteUserId(req);
+        const data = await getUserWithCart(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: "User cart details fetched successfully",
+            data,
         });
     } catch (error) {
         next(error);

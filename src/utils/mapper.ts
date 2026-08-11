@@ -4,6 +4,13 @@ import type { ProductResponseDto } from "../modules/products/dto/response/produc
 import type { UserWithProductsResponseDto } from "../modules/users/dto/response/user-with-products-response.dto.js";
 import type { UserWithProducts } from "../modules/users/user.repository.js";
 import type { CartResponseDto } from "../modules/cart/dto/response/cart-response.dto.js";
+import type { CartItemResponseDto } from "../modules/cart/dto/response/cart-item-response.dto.js";
+import type { UserWithCartResponseDto } from "../modules/cart/dto/response/cart-user-response.dto.js";
+import type {
+    CartItemWithProduct,
+    CartWithItems,
+    UserWithCart,
+} from "../modules/cart/cart.repository.js";
 
 export function toUserResponse(user: User): UserResponseDto {
     return {
@@ -44,6 +51,23 @@ export function toUserWithProductsResponse(
     };
 }
 
+export function toCartItemResponse(
+    item: CartItemWithProduct,
+): CartItemResponseDto {
+    const lineTotal = (Number(item.product.price) * item.quantity).toFixed(2);
+
+    return {
+        id: item.id,
+        productId: item.productId,
+        name: item.product.name,
+        sku: item.product.sku,
+        price: item.product.price,
+        status: item.product.status,
+        quantity: item.quantity,
+        lineTotal,
+    };
+}
+
 export function toCartResponse(cart: Cart): CartResponseDto {
     return {
         id: cart.id,
@@ -53,5 +77,31 @@ export function toCartResponse(cart: Cart): CartResponseDto {
         totalAmount: "0.00",
         createdAt: cart.createdAt,
         updatedAt: cart.updatedAt,
+    };
+}
+
+export function toCartWithItemsResponse(cart: CartWithItems): CartResponseDto {
+    const items = cart.items.map(toCartItemResponse);
+    const totalAmount = items
+        .reduce((sum, item) => sum + Number(item.lineTotal), 0)
+        .toFixed(2);
+
+    return {
+        id: cart.id,
+        userId: cart.userId,
+        items,
+        itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
+        totalAmount,
+        createdAt: cart.createdAt,
+        updatedAt: cart.updatedAt,
+    };
+}
+
+export function toUserWithCartResponse(
+    user: UserWithCart,
+): UserWithCartResponseDto {
+    return {
+        ...toUserResponse(user),
+        cart: user.cart ? toCartWithItemsResponse(user.cart) : null,
     };
 }
