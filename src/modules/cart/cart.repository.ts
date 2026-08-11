@@ -1,3 +1,8 @@
+import type { Cart } from "@prisma/client";
+import prisma from "../../config/prisma.js";
+
+
+
 // Cart DB queries go here
 // Examples to implement:
 // - findCartByUserId
@@ -8,13 +13,24 @@
 // - removeCartItem
 // - getCartWithItems
 
-import prisma from "../../config/prisma.js";
-import type { CartResponseDto } from "./dto/response/cart-response.dto.js";
 
 
+export async function findCartByUserId(
+    userId: string,
+): Promise<Cart | null> {
+    return prisma.cart.findUnique({
+        where: {
+            userId,
+        },
+    });
+}
 
-export async function findCartByUserId (
-    userId: string
-): Promise<CartResponseDto> {
-    return prisma
+export async function createCart(
+    userId: string,
+): Promise<Cart> {
+    return prisma.cart.create({
+        data: {
+            userId,
+        },
+    });
 }
