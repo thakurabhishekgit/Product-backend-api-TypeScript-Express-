@@ -1,0 +1,142 @@
+
+npx.cmd prisma studio -> Prisma Studio is up on http://localhost:5555
+
+Modify schema.prisma
+
+        ↓
+
+Create Migration
+
+        ↓
+
+Update Database
+
+        ↓
+
+Generate Prisma Client
+
+        ↓
+
+Use Prisma Client in Code
+
+
+1. Create a New Migration ⭐⭐⭐⭐⭐ (Most Used)
+
+Whenever you:
+
+Add a model
+Add a column
+Remove a column
+Rename a field
+Add relations
+Modify enums
+
+npx.cmd prisma migrate dev --name init
+
+
+Run:
+
+npx.cmd prisma migrate dev --name init
+
+Later
+
+npx.cmd prisma migrate dev --name add-product-model
+
+or
+
+npx.cmd prisma migrate dev --name add-category-relation
+
+or
+
+npx.cmd prisma migrate dev --name add-user-status
+
+
+| Command                                              | Usage                                          | How Often                     |
+| ---------------------------------------------------- | ---------------------------------------------- | ----------------------------- |
+| `npx.cmd prisma migrate dev --name <migration-name>` | Create migration + update DB + generate client | ⭐⭐⭐⭐⭐ Every schema change     |
+| `npx.cmd prisma studio`                              | Open database UI                               | ⭐⭐⭐⭐⭐ Daily                   |
+| `npx.cmd prisma generate`                            | Regenerate Prisma Client                       | ⭐⭐⭐ Occasionally              |
+| `npx.cmd prisma format`                              | Format schema                                  | ⭐⭐⭐ Occasionally              |
+| `npx.cmd prisma migrate reset`                       | Reset database                                 | ⭐⭐ During development         |
+| `npx.cmd prisma db pull`                             | Generate schema from existing DB               | ⭐ Rare                        |
+| `npx.cmd prisma db push`                             | Push schema without migration                  | ⭐ Rare (not for this project) |
+| `npx.cmd prisma migrate status`                      | Check migration status                         | ⭐ Debugging                   |
+| `npx.cmd prisma migrate deploy`                      | Apply migrations in production                 | ⭐ CI/CD                       |
+
+
+| Prisma Method  | Return Type             |
+| -------------- | ----------------------- |
+| `create()`     | `Promise<User>`         |
+| `findUnique()` | `Promise<User \| null>` |
+| `findFirst()`  | `Promise<User \| null>` |
+| `findMany()`   | `Promise<User[]>`       |
+| `update()`     | `Promise<User>`         |
+| `delete()`     | `Promise<User>`         |
+| `count()`      | `Promise<number>`       |
+
+
+
+
+Method	Use when
+findUnique
+One row by unique field (id, email, userId)
+
+findFirst
+First match (not necessarily unique)
+
+findMany
+List / filters
+
+create
+Insert one row
+
+createMany
+Insert many rows
+
+update
+Update one row by unique key
+
+updateMany
+Update many rows by filter
+
+delete
+Delete one row
+
+deleteMany
+Delete many rows
+
+upsert
+Create or update in one step
+
+count
+SELECT COUNT(*)
+
+aggregate
+SUM, AVG, etc.
+
+
+
+where
+Filter
+
+
+data
+Values to write
+
+
+select
+Pick fields
+
+include
+Load relations
+JOIN / nested select
+
+
+orderBy
+Sort
+ORDER BY
+
+
+take / skip
+Limit / offset
+LIMIT / OFFSET (pagination)
