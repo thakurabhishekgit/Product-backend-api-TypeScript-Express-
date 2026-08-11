@@ -1,3 +1,16 @@
+// Cart DB queries go here
+// Examples to implement:
+// - findCartByUserId
+// - createCart
+// - findCartItem
+// - addCartItem / upsertCartItem
+// - updateCartItemQuantity
+// - removeCartItem
+// - getCartWithItems
+
+
+
+
 import type { Cart, CartItem, Product, User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
 
