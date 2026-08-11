@@ -2,6 +2,7 @@ import { userRole, userstatus, type Product, type User } from "@prisma/client";
 import prisma from "../../config/prisma.js";
 import type { CreateUserRequestDto } from "./dto/request/create-user.dto.js";
 import type { UpdateUserRequestDto } from "./dto/request/update-user.dto.js";
+import { string } from "zod";
 
 export type UserWithProducts = User & {
     produscts: Product[];
@@ -114,3 +115,5 @@ export async function findUserWithProducts(
         },
     });
 }
+
+
