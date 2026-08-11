@@ -20,3 +20,11 @@ export async function createProduct(
         },
     });
 }
+
+export async function findProductById(
+    id: string,
+): Promise<Product | null> {
+    return prisma.product.findUnique({
+        where: { id },
+    });
+}

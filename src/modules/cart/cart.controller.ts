@@ -1,6 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../../utils/app-error.js";
-import { createCartForUser, getUserWithCart } from "./cart.service.js";
+import {
+    addProductToCart,
+    createCartForUser,
+    getUserWithCart,
+} from "./cart.service.js";
 
 function getRouteUserId(req: Request): string {
     const userId = req.params.userId;
@@ -44,6 +48,25 @@ export async function getUserCartDetails(
             success: true,
             message: "User cart details fetched successfully",
             data,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function addItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const userId = getRouteUserId(req);
+        const item = await addProductToCart(userId, req.body);
+
+        return res.status(200).json({
+            success: true,
+            message: "Product added to cart successfully",
+            data: item,
         });
     } catch (error) {
         next(error);

@@ -74,7 +74,7 @@ export async function addCartItem(
     cartId: string,
     productId: string,
     quantity: number = 1,
-) {
+): Promise<CartItemWithProduct> {
     return prisma.cartItem.upsert({
         where: {
             cartId_productId: {

@@ -1,14 +1,16 @@
 import { Router } from "express";
-import { createCart, getUserCartDetails } from "./cart.controller.js";
+import { addItem, createCart, getUserCartDetails } from "./cart.controller.js";
+import { validateBody } from "../../middlewares/validate.js";
+import { addToCartSchema } from "./validators/cart.validator.js";
 
 const cartRoutes = Router();
 
 cartRoutes.post("/create-cart/:userId", createCart);
 cartRoutes.get("/user-with-cart/:userId", getUserCartDetails);
-
-// Suggested later:
-// cartRoutes.post("/:userId/items", addItem);
-// cartRoutes.patch("/:userId/items/:productId", updateItem);
-// cartRoutes.delete("/:userId/items/:productId", removeItem);
+cartRoutes.post(
+    "/:userId/items",
+    validateBody(addToCartSchema),
+    addItem,
+);
 
 export default cartRoutes;
