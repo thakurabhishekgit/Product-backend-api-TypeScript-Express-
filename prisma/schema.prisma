@@ -20,6 +20,7 @@ model User {
   deletedAt   DateTime?
   status      userstatus @default(ACTIVE)
   produscts   Product[]
+  cart        Cart?
 }
 
 model Product {
@@ -36,6 +37,7 @@ model Product {
   updatedAt     DateTime      @updatedAt
   deletedAt     DateTime?
   createdBy     User          @relation(fields: [createdById], references: [id])
+  cartItems     CartItem[]
 }
 
 
